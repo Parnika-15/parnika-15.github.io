@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Page</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif, sans-serif;
+      background-image: url("lib pic 1.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    form {
+      background-color: white;
+      padding: 20px;
+      margin: 20px auto;
+      width: 300px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 8px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <form action="file:///C:/Users/admin/Desktop/dd/lib2.html">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" required>
+    <input type="submit" value="Login">
+  </form>
+
+  <script>
+    var loginForm = document.getElementById("loginForm");
+    loginForm.addEventListener("submit", handleLoginFormSubmit);
+
+    function handleLoginFormSubmit(event) {
+      event.preventDefault();
+
+      var nameInput = document.getElementById("name");
+      var userIdInput = document.getElementById("userId");
+
+      var name = nameInput.value;
+      var userId = userIdInput.value;
+
+      // No authentication check required for this example
+      // Proceed to Library Management page
+      window.location.href = "library_management.html?name=" + encodeURIComponent(name) + "&userId=" + encodeURIComponent(userId);
+
+      // Clear the input fields
+      nameInput.value = "";
+      userIdInput.value = "";
+    }
+  </script>
+</body>
+</html>

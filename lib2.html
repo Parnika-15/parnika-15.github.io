@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library Management Page</title>
+  <style>
+    body {
+     font-family: 'Times New Roman', Times, serif, sans-serif;
+            background-image: url("lib pic.jpeg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Library Management Page</h1>
+  
+  <form id="filterForm">
+    <label for="filterTitle">Title:</label>
+    <input type="text" id="filterTitle">
+    <label for="filterAuthor">Author:</label>
+    <input type="text" id="filterAuthor">
+    <label for="filterSubject">Subject:</label>
+    <input type="text" id="filterSubject">
+    <label for="filterPublishDate">Publish Date:</label>
+    <input type="text" id="filterPublishDate">
+    <button type="submit">Filter</button>
+  </form>
+  
+  <table id="bookTable">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Subject</th>
+        <th>Publish Date</th>
+      </tr>
+    </thead>
+    <tbody id="bookList">
+      <!-- Book entries will be dynamically added here -->
+    </tbody>
+  </table>
+
+  <div id="pagination">
+    <!-- Pagination links will be dynamically added here -->
+  </div>
+  
+  <script>
+    var books = [
+      { title: "To Kill a Mockingbird", author: "Harper Lee", subject: "Fiction", publishDate: "1960" },
+      { title: "1984", author: "George Orwell", subject: "Dystopian Fiction", publishDate: "1949" },
+      { title: "Pride and Prejudice", author: "Jane Austen", subject: "Romance", publishDate: "1813" },
+      { title: "The Great Gatsby", author: "F. Scott Fitzgerald", subject: "Classic Fiction", publishDate: "1925" },
+      { title: "Moby-Dick", author: "Herman Melville", subject: "Adventure", publishDate: "1851" },
+      { title: "To the Lighthouse", author: "Virginia Woolf", subject: "Modernist Literature", publishDate: "1927" },
+      { title: "The Catcher in the Rye", author: "J.D. Salinger", subject: "Coming-of-Age Fiction", publishDate: "1951" },
+      { title: "Frankenstein", author: "Mary Shelley", subject: "Gothic Fiction", publishDate: "1818" },
+      { title: "Brave New World", author: "Aldous Huxley", subject: "Science Fiction", publishDate: "1932" },
+      { title: "The Lord of the Rings", author: "J.R.R. Tolkien", subject: "Fantasy", publishDate: "1954-1955" }
+    ];
+    var filteredBooks = books.slice(); // Copy all books initially
+    
+    var itemsPerPage = 10;
+    var currentPage = 1;
+    
+    var filterForm = document.getElementById("filterForm");
+    var bookList = document.getElementById("bookList");
+    var pagination = document.getElementById("pagination");
+    
+    filterForm.addEventListener("submit", handleFilterSubmit);
+    
+    function handleFilterSubmit(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      
+      var filterTitle = document.getElementById("filterTitle").value.toLowerCase();
+      var filterAuthor = document.getElementById("filterAuthor").value.toLowerCase();
+      var filterSubject = document.getElementById("filterSubject").value.toLowerCase();
+      var filterPublishDate = document.getElementById("filterPublishDate").value.toLowerCase();
+      
+      filteredBooks = books.filter(function(book) {
+        var titleMatch = book.title.toLowerCase().includes(filterTitle);
+        var authorMatch = book.author.toLowerCase().includes(filterAuthor);
+        var subjectMatch = book.subject.toLowerCase().includes(filterSubject);
+        var publishDateMatch = book.publishDate.toLowerCase().includes(filterPublishDate);
+        
+        return titleMatch && authorMatch && subjectMatch && publishDateMatch;
+      });
+      
+      currentPage = 1;
+      generateBookRows();
+      generatePaginationLinks();
+    }
+    
+    function generateBookRows() {
+      bookList.innerHTML = ""; // Clear existing entries
+      
+      var startIndex = (currentPage - 1) * itemsPerPage;
+      var endIndex = startIndex + itemsPerPage;
+      var pageBooks = filteredBooks.slice(startIndex, endIndex);
+      
+      for (var i = 0; i < pageBooks.length; i++) {
+        var book = pageBooks[i];
+        
+        var row = document.createElement("tr");
+        
+        var titleCell = document.createElement("td");
+        titleCell.textContent = book.title;
+        row.appendChild(titleCell);
+        
+        var authorCell = document.createElement("td");
+        authorCell.textContent = book.author;
+        row.appendChild(authorCell);
+        
+        var subjectCell = document.createElement("td");
+        subjectCell.textContent = book.subject;
+        row.appendChild(subjectCell);
+        
+        var publishDateCell = document.createElement("td");
+        publishDateCell.textContent = book.publishDate;
+        row.appendChild(publishDateCell);
+        
+        bookList.appendChild(row);
+      }
+    }
+    
+    function generatePaginationLinks() {
+      pagination.innerHTML = ""; // Clear existing links
+      
+      var pageCount = Math.ceil(filteredBooks.length / itemsPerPage);
+      
+      for (var i = 1; i <= pageCount; i++) {
+        var link = document.createElement("a");
+        link.href = "#";
+        link.textContent = i;
+        
+        if (i === currentPage) {
+          link.classList.add("active");
+        }
+        
+        link.addEventListener("click", function(event) {
+          event.preventDefault();
+          
+          currentPage = parseInt(this.textContent);
+          generateBookRows();
+          generatePaginationLinks();
+        });
+        
+        pagination.appendChild(link);
+      }
+    }
+    
+    generateBookRows();
+    generatePaginationLinks();
+  </script>
+</body>
+</html>
